@@ -1,5 +1,5 @@
-GAME_BOARD = [["X", "X", "X", "X", "X", "X", "X"] for x in range(7)]
-LETTERS_TO_NUMBERS = {"A": 0, "B": 1, "C": 3, "D": 4, "E": 5, "F": 6}
+GAME_BOARD = [[" ", " ", " ", " ", " ", " ", " "] for x in range(7)]
+LETTERS_TO_NUMBERS = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
 print(GAME_BOARD)
 
 def display_interface(board):
@@ -13,4 +13,12 @@ def display_interface(board):
 
         print(f"{i + 1}| {row}")
 
-display_interface(GAME_BOARD)
+def make_hit(cord):
+    x = int(cord[1]) - 1
+    y = LETTERS_TO_NUMBERS[cord[0]]
+    GAME_BOARD[x][y] = "X"
+
+while True:
+    display_interface(board=GAME_BOARD)
+    hit_coordinate = input("Enter a coordinate in 'letter/digit' form: ")
+    make_hit(hit_coordinate)
