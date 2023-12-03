@@ -27,9 +27,10 @@ def generate_ship():
     y = random.randint(0, 6)
 
     if got_interruption(x, y) == True:
-        print("Failed to create ship because of interruption!")
+        return False
     else:
         GAME_BOARD[x][y] = "O" 
+        return True
 
 
 
@@ -42,9 +43,12 @@ def got_interruption(x, y):
         for j in range(y - 1, y + 2):
 
             if i == x and j == y:
-                continue
+                if ship_exists(i, j):
+                    interrupted = True
+                else:
+                    continue
 
-            elif 1 <= i <= 6 and 1 <= j <= 6:
+            elif 0 <= i <= 6 and 0 <= j <= 6:
                 if ship_exists(i, j):
                     interrupted = True
 
@@ -61,8 +65,10 @@ def ship_exists(x_cord, y_cord):
 #    for i in range(elem[0]):
 #        generate_ship(elem[1])
 
-for i in range(5):
-    generate_ship()
+count = 0
+while count != 4:
+    if generate_ship() == True:
+        count += 1
     
 
 # game loop
