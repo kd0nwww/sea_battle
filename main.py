@@ -8,7 +8,7 @@ LETTERS_TO_NUMBERS = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
 
 ships_amount = {1: 3, 2: 2}
 
-def already_shot(cord):
+def is_already_shot(cord):
     x = int(cord[1]) - 1
     y = LETTERS_TO_NUMBERS[cord[0]]
 
@@ -36,13 +36,13 @@ def make_hit(cord):
     else:
         VISIBLE_BOARD[x][y] = "m"
 
-def generate_ship():
+def generate_single_ship():
 
     x = random.randint(0, 6)
     y = random.randint(0, 6)
 
     if got_interruption(x, y) == True:
-        generate_ship()
+        generate_single_ship()
     else:
         GAME_BOARD[x][y] = "O" 
 
@@ -123,14 +123,14 @@ for elem in ships_amount.items():
             c += 1
 
 for i in range(4):
-    generate_ship()
+    generate_single_ship()
 
 # game loop
 while True:
-
+    print("Missed shots are marked as 'm'.\nHitting shots are marked as 'X'.")
     display_interface(board=VISIBLE_BOARD)
     hit_coordinate = input("Enter a coordinate in 'letter/digit' form: ")
-    if not already_shot(hit_coordinate):
+    if not is_already_shot(hit_coordinate):
         make_hit(hit_coordinate)
     else:
         os.system("cls")
