@@ -2,7 +2,7 @@ import random
 
 GAME_BOARD = [[" ", " ", " ", " ", " ", " ", " "] for x in range(7)]
 LETTERS_TO_NUMBERS = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
-print(GAME_BOARD)
+
 ships_amount = {1: 3, 2: 2}
 
 def display_interface(board):
@@ -27,10 +27,9 @@ def generate_ship():
     y = random.randint(0, 6)
 
     if got_interruption(x, y) == True:
-        return False
+        generate_ship()
     else:
         GAME_BOARD[x][y] = "O" 
-        return True
 
 def got_interruption(x, y):
 
@@ -58,14 +57,16 @@ def ship_exists(x_cord, y_cord):
     else: 
         return False
     
-def generate_big_ship(x_cord, y_cord, length):
+def generate_big_ship(length):
+    x_cord = random.randint(0, 6)
+    y_cord = random.randint(0, 6)
     directions = []
     created_big_ship = True
 
     if not got_interruption(x_cord, y_cord):
-        if x_cord + length <= 7:
+        if x_cord + length <= 6:
             directions.append("down")
-        if y_cord + length <= 7:
+        if y_cord + length <= 6:
             directions.append("right")
         if x_cord - length >= -1:
             directions.append("up")
@@ -77,28 +78,27 @@ def generate_big_ship(x_cord, y_cord, length):
     choice = random.choice(directions)
     
     if choice == "left":
-        count = y_cord
+        count = y_cord + 1
         for i in range(length):
             GAME_BOARD[x_cord][count - 1] = "O"
             count -= 1
-    if choice == "right":
-        count = y_cord
+    elif choice == "right":
+        count = y_cord - 1 
         for i in range(length):
             GAME_BOARD[x_cord][count + 1] = "O"
             count += 1  
-    if choice == "up":
-        count = x_cord
+    elif choice == "up":
+        count = x_cord + 1
         for i in range(length):
             GAME_BOARD[count - 1][y_cord] = "O"
             count -= 1   
-    if choice == "down":
-        count = x_cord
+    elif choice == "down":
+        count = x_cord - 1
         for i in range(length):
-            GAME_BOARD[count - 1][y_cord] = "O"
+            GAME_BOARD[count + 1][y_cord] = "O"
             count += 1   
 
     return created_big_ship
-
 
 #for elem in ships_amount.items():
 #    for i in range(elem[0]):
@@ -119,13 +119,11 @@ def generate_big_ship(x_cord, y_cord, length):
 for elem in ships_amount.items():
     c = 0
     while c != elem[0]:
-        if generate_big_ship(random.randint(0,6), random.randint(0,6), elem[1]):
+        if generate_big_ship(elem[1]):
             c += 1
 
-cou = 0
-while cou != 4:
-    if generate_ship():
-        cou += 1
+for i in range(4):
+    generate_ship()
 
 # game loop
 while True:
@@ -133,5 +131,3 @@ while True:
     display_interface(board=GAME_BOARD)
     hit_coordinate = input("Enter a coordinate in 'letter/digit' form: ")
     make_hit(hit_coordinate)
-
-
