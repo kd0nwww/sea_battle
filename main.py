@@ -1,9 +1,21 @@
 import random
+import os
+import time
 
 GAME_BOARD = [[" ", " ", " ", " ", " ", " ", " "] for x in range(7)]
+VISIBLE_BOARD = [[" ", " ", " ", " ", " ", " ", " "] for x in range(7)]
 LETTERS_TO_NUMBERS = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
 
 ships_amount = {1: 3, 2: 2}
+
+def already_shot(cord):
+    x = int(cord[1]) - 1
+    y = LETTERS_TO_NUMBERS[cord[0]]
+
+    if VISIBLE_BOARD[x][y] == "m" or VISIBLE_BOARD[x][y] == "X":
+        return True
+    else:
+        return False
 
 def display_interface(board):
     print("   A B C D E F G")
@@ -19,7 +31,10 @@ def display_interface(board):
 def make_hit(cord):
     x = int(cord[1]) - 1
     y = LETTERS_TO_NUMBERS[cord[0]]
-    GAME_BOARD[x][y] = "X"
+    if GAME_BOARD[x][y] == "O":
+        VISIBLE_BOARD[x][y] = "X"
+    else:
+        VISIBLE_BOARD[x][y] = "m"
 
 def generate_ship():
 
@@ -100,21 +115,6 @@ def generate_big_ship(length):
 
     return created_big_ship
 
-#for elem in ships_amount.items():
-#    for i in range(elem[0]):
-#        generate_ship(elem[1])
-
-#count = 0
-#while count != 4:
-#    if generate_ship() == True:
-#        count += 1
-
-#c = 0
-#while c != 1:
-#    x = random.randint(0, 6)
-#    y = random.randint(0, 6)
-#    if generate_big_ship(x, y, 3) != False:
-#        c += 1
     
 for elem in ships_amount.items():
     c = 0
@@ -128,6 +128,13 @@ for i in range(4):
 # game loop
 while True:
 
-    display_interface(board=GAME_BOARD)
+    display_interface(board=VISIBLE_BOARD)
     hit_coordinate = input("Enter a coordinate in 'letter/digit' form: ")
-    make_hit(hit_coordinate)
+    if not already_shot(hit_coordinate):
+        make_hit(hit_coordinate)
+    else:
+        os.system("cls")
+        print("You've already shot in this point!")
+        time.sleep(2.0)
+       
+    os.system("cls")
